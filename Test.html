@@ -1,0 +1,35 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>JSP Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"
+    >
+    </script>
+    <script src="jquery.xdomainajax.js"></script>
+    <script src="qunit.js"></script>
+    <script type="text/javascript">
+
+     function callme(){
+
+        
+    	 $.ajax({
+    		    url: 'https://triton-alpha.ebay.com/2.2/user/carts',
+    		    type: 'GET',
+    		    success: function(res) {
+   
+    		        alert(res.responseText);
+    		    }
+    		});
+
+   }
+  </script> 
+</head>
+
+<body>
+    <form id="form1" method="GET">
+      
+        <input type="button" Value="SUBMIT" onclick="callme();">
+    </form>
+</body>
+
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>
+    </title>
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
+    rel="stylesheet">
+    
+        <style>
+      html, body, #map-canvas {
+        margin-left: 20px;
+        padding: 0;
+        height: 100%;
+        width:95%;
+      }
+      
+      #map-canvas {
+        margin: 0;
+        padding: 0;
+        height: 60%;
+        width: 100%
+      }
+    </style>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"
+    >
+    </script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"
+    >
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script>
+		var map;
+		var marker;
+		var myLatlng;
+			
+		function initialize() {
+		  var mapOptions = {
+		    zoom: 20,
+		    center: new google.maps.LatLng(37.376558,-121.92224),
+		    mapTypeId: google.maps.MapTypeId.SATELLITE
+		  };
+		  map = new google.maps.Map(document.getElementById('map-canvas'),
+		      mapOptions);
+		  
+		  myLatlng = new google.maps.LatLng(37.376558,-121.92224);
+		  var image = 'quad.png';
+		  marker = new google.maps.Marker({
+			    position: myLatlng,
+			    map: map,
+			    title:"Hello World!",
+			    icon: image
+			});	
+		}
+		
+		google.maps.event.addDomListener(window, 'load', initialize);
+		
+		function track()
+		{
+		    	$.get('http://127.0.0.1:9876/?command=info-uas', function(response) {
+		    		var resData = response.split(",");
+		        	myLatlng = new google.maps.LatLng(resData[0],resData[1]);
+					marker.setPosition(myLatlng);
+		    	});
+			
+			
+			self.setInterval(function(){updateTrack()},500);
+		}
+		
+		function updateTrack()
+		{
+		    	$.get('http://127.0.0.1:9876/?command=info-uas', function(response) {
+		    		var resData = response.split(",");
+		        	myLatlng = new google.maps.LatLng(resData[0],resData[1]);
+					marker.setPosition(myLatlng);
+		    	});
+
+
+		}
+    </script>
+  </head>
+  
+  <body>
+
+
+    <div class="page-header">
+      <h3>
+        <div>
+          <img src="logo.png">
+          <img src="quad1.png">
+        </div>
+       
+      </h3>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          Live Tracking
+          <a onclick="track()" id="track" class="btn btn-default">Track</a>
+          <a onclick="launch()" id="launch" class="btn btn-default">Launch</a>
+            <a onclick="go()" id="go" class="btn btn-default">GO</a>
+            <a onclick="land()" id="land" class="btn btn-default">Land</a>
+            <br>
+          </div>
+        </h3>
+        <div id="result"></div>
+      </div>
+    </div>
+	<div id="map-canvas"></div>
+	
+	    <script type="text/javascript">
+    function launch(){
+    	$.get('http://127.0.0.1:9876/?command=launch', function(response) {
+        	$('#result').text(response);
+    	});
+    }
+    function go(){
+    	$.get('http://127.0.0.1:9876/?command=set-location-uas&address=TownHall-Garden', function(response) {
+        	$('#result').text(response);
+    	});
+    }
+    function land(){
+    	$.get('http://127.0.0.1:9876/?command=land', function(response) {
+        	$('#result').text(response);
+    	});
+    }
+    </script>
+  </body>
+
+</html>
